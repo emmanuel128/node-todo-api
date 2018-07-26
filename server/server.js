@@ -103,6 +103,17 @@ app.patch('/todos/:id', (req, res) => {
     });
 });
 
+app.post('/users', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+    var user = new User(body);
+
+    user.save().then((doc) => {
+        res.send(doc);
+    }, (error) => {
+        res.status(400).send(error);
+    });
+})
+
 app.listen(PORT, () => {
     console.log(`Running on ${PORT}`);
 });
