@@ -1,5 +1,6 @@
-require('./config/config');
+const { client } = require('./config/twilio.config'); 
 
+require('./config/config');
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,6 +15,16 @@ var app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+
+app.get('/text/:number', (req, res) => {
+    var number = req.params.number;
+
+    client.messages.create({
+        body: 'Hola, has ganado $1000! Favor de contestar este mensaje para enviarle los próximos pasos.',
+        to: `whatsapp:+${number}`,
+        from: 'whatsapp:+14155238886'
+    }).then(message => res.send(message), rej => res.status(500).send(rej));
+});
 
 app.post('/todos', (req, res) => {
     var todo = new Todo({
